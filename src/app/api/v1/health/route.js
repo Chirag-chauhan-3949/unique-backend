@@ -21,6 +21,15 @@ export async function GET(request) {
       privateKeyStart: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.substring(0, 30) || '',
       hasResendKey: !!process.env.RESEND_API_KEY,
     };
+
+    if (adminDb) {
+      try {
+        const doc = await adminDb.collection('userdata').doc('7999952226').get();
+        base.firestoreTest = { connected: true, docExists: doc.exists };
+      } catch (e) {
+        base.firestoreTest = { connected: false, error: e.message };
+      }
+    }
   }
 
   return success(base);
