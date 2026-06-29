@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // API-only backend — no frontend pages needed
+  serverExternalPackages: ['firebase-admin'],
 };
 
 export default nextConfig;
