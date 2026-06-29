@@ -26,6 +26,6 @@ export async function POST(request) {
     });
   } catch (err) {
     console.error('Verify credentials error:', err);
-    return error('Internal server error', 500);
+    return error(`Internal server error: ${err.message}`, 500);
   }
 }
