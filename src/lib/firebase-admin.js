@@ -6,7 +6,12 @@ let adminDb = null;
 let adminAuth = null;
 
 try {
-  if (!process.env.FIREBASE_ADMIN_PROJECT_ID) {
+  const clean = (s) => s?.replace(/[﻿\r\n\t]/g, '').trim();
+
+  const projectId = clean(process.env.FIREBASE_ADMIN_PROJECT_ID);
+  const clientEmail = clean(process.env.FIREBASE_ADMIN_CLIENT_EMAIL);
+
+  if (!projectId) {
     throw new Error('Firebase Admin credentials not configured');
   }
 
@@ -14,11 +19,11 @@ try {
     ? getApps()[0]
     : initializeApp({
         credential: cert({
-          projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-          clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+          projectId,
+          clientEmail,
           privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
         }),
-        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
+        projectId,
       });
 
   adminDb = getFirestore(app);
