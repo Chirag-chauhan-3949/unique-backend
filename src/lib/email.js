@@ -1,6 +1,10 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend = null;
+function getResend() {
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 const FROM = 'Unique Sorter CRM <onboarding@resend.dev>';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'chiragsinghchauhan3949323@gmail.com';
@@ -8,7 +12,7 @@ const APP_URL = process.env.APP_URL || 'https://unique-sorter-one.vercel.app';
 
 export async function sendEmail({ to, subject, html }) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: FROM,
       to: Array.isArray(to) ? to : [to],
       subject,
