@@ -1,9 +1,11 @@
+import { rateLimit } from '@/lib/rate-limit';
 import { success, error } from '@/lib/response';
 
 export async function POST(request) {
   try {
     const { idToken } = await request.json();
     if (!idToken) return error('Firebase ID token is required', 400);
+    if (!rateLimit(`verify-token:${idToken.slice(-16)}`, 10, 60 * 1000)) return error('Too many attempts. Please try again later.', 429);
 
     const { adminAuth, adminDb } = await import('@/lib/firebase-admin');
     if (!adminAuth) return error('Auth service unavailable', 503);
